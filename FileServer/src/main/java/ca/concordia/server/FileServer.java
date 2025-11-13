@@ -50,7 +50,23 @@ public class FileServer {
                                 writer.println("END_OF_LIST");
                                 writer.flush();
                                 break;
-                            //TODO: Implement other commands READ, WRITE, DELETE,
+                            case "WRITE":
+                                // Combine everything after the filename into one message string
+                                StringBuilder message = new StringBuilder();
+                                for (int i = 2; i < parts.length; i++) {
+                                    message.append(parts[i]);
+                                    if (i < parts.length - 1) message.append(" "); //adding space after each words except the last one
+                                }
+                                byte[] bytes = message.toString().getBytes();
+                                fsManager.writeFile(parts[1], bytes);
+                                writer.println("SUCCESS: File '" + parts[1] + "' written.");
+                                writer.flush();
+                                break;
+                            case "READ":
+                                byte[] data = fsManager.readFile(parts[1]);
+                                writer.println("CONTENTS: " + new String(data));
+                                writer.flush();
+                                break;
                             case "QUIT":
                                 writer.println("SUCCESS: Disconnecting.");
                                 return;

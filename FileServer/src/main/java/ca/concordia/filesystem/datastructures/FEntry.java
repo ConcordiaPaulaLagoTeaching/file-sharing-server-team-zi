@@ -44,4 +44,13 @@ public class FEntry {
     public short getFirstBlock() {
         return firstBlock;
     }
+
+    //do we need also a set function for firstblock?
+    public void setFirstBlock(short firstBlock) {
+        if (firstBlock < -1) {
+            throw new IllegalArgumentException("First block cannot be less than -1.");
+        }
+        this.firstBlock = firstBlock;
+    }
+
 }

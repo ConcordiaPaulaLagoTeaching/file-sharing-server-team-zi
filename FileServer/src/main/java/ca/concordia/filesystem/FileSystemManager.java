@@ -15,6 +15,7 @@ public class FileSystemManager {
     private final RandomAccessFile disk;
 
     private static final int BLOCK_SIZE = 128; // Example block size
+    private static final int METADATA_BLOCKS = 2; //TO RESERVE BLOCKS 0 AND 1
 
     private FEntry[] inodeTable; // Array of inodes
     private boolean[] freeBlockList; // Bitmap for free blocks
@@ -121,7 +122,7 @@ public class FileSystemManager {
 
             int[] allocatedBlocks = new int[numOfBlocksNeeded];
             int found = 0;
-            for (int i = 0; i < freeBlockList.length; i++) {
+            for (int i = METADATA_BLOCKS; i < freeBlockList.length; i++) {
                 if (freeBlockList[i]) {
                     allocatedBlocks[found] = i;
                     found++;
@@ -319,10 +320,23 @@ public class FileSystemManager {
     }
 
     private void freshFileSystem() throws Exception {
-        for (int i = 1; i < MAXBLOCKS; i++) {
-            freeBlockList[i] = true; //all blocks are free except block 0
+       // for (int i = 1; i < MAXBLOCKS; i++) {
+        //    freeBlockList[i] = true; //all blocks are free except block 0
+        //}
+        // Clear inode table
+        for (int i = 0; i < MAXFILES; i++) {
+            inodeTable[i] = null;
         }
 
+        // Reserve blocks 0 for metadata
+        for (int i = 0; i < MAXBLOCKS; i++) {
+            freeBlockList[i] = (i >= METADATA_BLOCKS);
+        }
+
+        // Reset FNode next pointers
+        for (int i = 0; i < MAXBLOCKS; i++) {
+            fnodeTable[i].setNext(-1);
+        }
         saveMetadata();
     }
 

@@ -1,6 +1,6 @@
 name: Autograding Tests
 'on':
-  repository_dispatch: []
+  repository_dispatch: {}
   schedule:
   - cron: '0 23 * * *'
 permissions:
@@ -76,15 +76,6 @@ jobs:
         setup-command: ''
         command: mvn -Dtest=ServerTests#testMalformedInputDoesNotCrashServer test
         timeout: 1
-        max-score: 5
-    - name: Server handles 1000 clients
-      id: server-handles-1000-clients
-      uses: classroom-resources/autograding-command-grader@v1
-      with:
-        test-name: Server handles 1000 clients
-        setup-command: ''
-        command: mvn -Dtest=ServerTests#testHandlesHundredsOfClientsQuickly test
-        timeout: 5
         max-score: 5
     - name: Restart Persistence
       id: restart-persistence

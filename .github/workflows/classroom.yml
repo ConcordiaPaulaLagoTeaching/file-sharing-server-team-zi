@@ -1,5 +1,7 @@
 name: Autograding Tests
 'on':
+  push:
+    branches: [zineb-testing, main]
   repository_dispatch: {}
   schedule:
   - cron: '0 23 * * *'
